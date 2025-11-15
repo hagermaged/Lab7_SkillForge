@@ -170,7 +170,7 @@ public class LoginFrame extends javax.swing.JFrame {
 private void openSignUpFrame()
 {
   new SignUpFrame().setVisible(true);
-  this.dispose();//close login window
+  //this.dispose();//close login window
 }
     private void openDashboardBasedOnRole(String email)
 {
