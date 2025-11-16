@@ -258,6 +258,7 @@ private void backToLogin()
     
     return auth.signUp(username, email, password, role.toLowerCase());
     }
+    
     private boolean isValidEmail(String email)
 {
 return email.matches("^[A-Za-z0-9+_.~]+@(.+)$");

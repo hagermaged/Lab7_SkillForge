@@ -18,6 +18,7 @@ public class AuthService {
 private JsonDatabaseManager dbManager;
 private IdGenerator idGenerator;
 
+
     public AuthService() {
         this.dbManager = new JsonDatabaseManager();
         this.idGenerator = new IdGenerator();
