@@ -5,26 +5,27 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- *
- * @author orignal store
- */
 public class Student extends User {
-    private List<String>enrolledCourses;
-    private int progress;
-    public Student()
-    {
+    private List<String> enrolledCourses;
+    private int progress; // Overall progress percentage
+    private Map<String, List<String>> courseProgress; // Course-specific completed lessons
+    
+    public Student() {
         super();
-        this.enrolledCourses=new ArrayList<>();
-        this.progress=0;
+        this.enrolledCourses = new ArrayList<>();
+        this.progress = 0;
+        this.courseProgress = new HashMap<>();
     }
-    public Student(String username,String email,String passwordHash,String userId)
-    {
-        super(username,email,"student",userId,passwordHash);
-        this.enrolledCourses=new ArrayList<>();
-        this.progress=0;
+    
+    public Student(String username, String email, String passwordHash, String userId) {
+        super(username, email, "student", userId, passwordHash);
+        this.enrolledCourses = new ArrayList<>();
+        this.progress = 0;
+        this.courseProgress = new HashMap<>();
     }
 
     public List<String> getEnrolledCourses() {
@@ -42,27 +43,48 @@ public class Student extends User {
     public void setProgress(int progress) {
         this.progress = progress;
     }
-    @Override
-    public String getUserType()
-    {
+    
+    public Map<String, List<String>> getCourseProgress() {
+        return courseProgress;
+    }
+
+    public void setCourseProgress(Map<String, List<String>> courseProgress) {
+        this.courseProgress = courseProgress;
+    }
+   
+    public String getUserType() {
         return "student";
     }
-    //Helper methods
-    public void enrollInCourse(String courseId)
-    {
-        if(!enrolledCourses.contains(courseId))
-        {  //new course added to the list
+    
+    // Helper methods
+    public void enrollInCourse(String courseId) {
+        if (!enrolledCourses.contains(courseId)) {
             enrolledCourses.add(courseId);
-            
+            // Initialize progress tracking for this course
+            courseProgress.putIfAbsent(courseId, new ArrayList<>());
         }
-        //else{
-            //add a message to be linked to the frontend that the student is already enrolled to the course
-            //return;
-        //}  
-    }
-    public void unenrollFromCourse(String courseId)
-    {
-        enrolledCourses.remove(courseId);
     }
     
+    public void unenrollFromCourse(String courseId) {
+        enrolledCourses.remove(courseId);
+        courseProgress.remove(courseId);
+    }
+    
+    public void completeLesson(String courseId, String lessonId) {
+        List<String> completedLessons = courseProgress.getOrDefault(courseId, new ArrayList<>());
+        if (!completedLessons.contains(lessonId)) {
+            completedLessons.add(lessonId);
+            courseProgress.put(courseId, completedLessons);
+        }
+    }
+    
+    public List<String> getCompletedLessons(String courseId) {
+        return courseProgress.getOrDefault(courseId, new ArrayList<>());
+    }
+    
+    public int getCourseProgressPercentage(String courseId, int totalLessons) {
+        if (totalLessons == 0) return 0;
+        List<String> completed = getCompletedLessons(courseId);
+        return (completed.size() * 100) / totalLessons;
+    }
 }

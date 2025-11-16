@@ -1,0 +1,9 @@
+service\CourseService.class
+db\JsonDatabaseManager$2.class
+model\Course.class
+model\Student.class
+skillforgePackage\TestMain.class
+model\Instructor.class
+db\JsonDatabaseManager$1.class
+db\JsonDatabaseManager$UserDeserializer.class
+model\Lesson.class

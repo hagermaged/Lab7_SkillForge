@@ -1,0 +1,112 @@
+[
+  {
+    "courseId": "C1",
+    "courseTitle": "Introduction to Java",
+    "courseDescription": "Learn basic Java programming",
+    "instructorId": "U2",
+    "students": [],
+    "lessons": [
+      {
+        "lessonId": "L1",
+        "lessonTitle": "Java Basics",
+        "content": "Introduction to Java syntax and basic concepts",
+        "resources": [
+          "slide1.pdf",
+          "video1.mp4"
+        ]
+      },
+      {
+        "lessonId": "L2",
+        "lessonTitle": "Object-Oriented Programming",
+        "content": "Classes, objects, inheritance, and polymorphism",
+        "resources": []
+      },
+      {
+        "lessonId": "L3",
+        "lessonTitle": "Exception Handling",
+        "content": "How to handle errors and exceptions in Java",
+        "resources": [
+          "exercise1.zip"
+        ]
+      }
+    ]
+  },
+  {
+    "courseId": "C2",
+    "courseTitle": "Advanced Algorithms",
+    "courseDescription": "Advanced algorithm design and analysis techniques",
+    "instructorId": "U2",
+    "students": [
+      {
+        "enrolledCourses": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "progress": 40,
+        "courseProgress": {
+          "C1": [
+            "L1",
+            "L2"
+          ],
+          "C2": [
+            "L3"
+          ],
+          "C3": []
+        },
+        "username": "john_doe",
+        "email": "john@example.com",
+        "role": "student",
+        "userId": "U1",
+        "passwordHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+      }
+    ],
+    "lessons": [
+      {
+        "lessonId": "L4",
+        "lessonTitle": "Sorting Algorithms",
+        "content": "Bubble sort, merge sort, quick sort analysis",
+        "resources": []
+      },
+      {
+        "lessonId": "L5",
+        "lessonTitle": "Graph Algorithms",
+        "content": "BFS, DFS, Dijkstra\u0027s algorithm",
+        "resources": [
+          "graph_theory.pdf"
+        ]
+      }
+    ]
+  },
+  {
+    "courseId": "C3",
+    "courseTitle": "Web Development",
+    "courseDescription": "Full-stack web development with modern frameworks",
+    "instructorId": "U2",
+    "students": [],
+    "lessons": [
+      {
+        "lessonId": "L6",
+        "lessonTitle": "HTML \u0026 CSS Fundamentals",
+        "content": "Building the structure and style of web pages",
+        "resources": []
+      },
+      {
+        "lessonId": "L7",
+        "lessonTitle": "JavaScript Basics",
+        "content": "Introduction to JavaScript programming",
+        "resources": [
+          "js_tutorial.pdf"
+        ]
+      }
+    ]
+  },
+  {
+    "courseId": "C4",
+    "courseTitle": "Test Course",
+    "courseDescription": "This is a test course",
+    "instructorId": "U2",
+    "students": [],
+    "lessons": []
+  }
+]

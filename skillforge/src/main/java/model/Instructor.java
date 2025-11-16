@@ -31,7 +31,7 @@ public class Instructor extends User {
     public void setCreatedCourses(List<String> createdCourses) {
         this.createdCourses = createdCourses;
     }
-     @Override
+     
     public String getUserType()
     {
         return "instructor";

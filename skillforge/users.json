@@ -1,0 +1,43 @@
+[
+  {
+    "enrolledCourses": [
+      "C1",
+      "C2",
+      "C3"
+    ],
+    "progress": 42,
+    "courseProgress": {
+      "C1": [
+        "L1",
+        "L2"
+      ],
+      "C2": [
+        "L3"
+      ],
+      "C3": []
+    },
+    "username": "john_doe",
+    "email": "john@example.com",
+    "role": "student",
+    "userId": "U1",
+    "passwordHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+  },
+  {
+    "createdCourses": [],
+    "username": "prof_smith",
+    "email": "prof@example.com",
+    "role": "instructor",
+    "userId": "U2",
+    "passwordHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+  },
+  {
+    "enrolledCourses": [],
+    "progress": 0,
+    "courseProgress": {},
+    "username": "jana",
+    "email": "jana@example.com",
+    "role": "student",
+    "userId": "U3",
+    "passwordHash": "b9c950640e1b3740e98acb93e669c65766f6670dd1609ba91ff41052ba48c6f3"
+  }
+]
