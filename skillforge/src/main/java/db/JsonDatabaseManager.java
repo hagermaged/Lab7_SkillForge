@@ -9,13 +9,21 @@ package db;
  * @author Hajer1
  */
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-import model.*;
-import java.io.*;
+import java.io.Reader;
+import java.io.Writer;
 import java.lang.reflect.Type;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import model.Course;
+import model.User;
 
 public class JsonDatabaseManager {
 

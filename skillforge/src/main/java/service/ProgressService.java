@@ -1,8 +1,10 @@
 package service;
 
+import java.util.List;
+
 import db.JsonDatabaseManager;
-import model.*;
-import java.util.*;
+import model.Student;
+import model.User;
 
 public class ProgressService {
 
@@ -12,30 +14,21 @@ public class ProgressService {
         this.db = db;
     }
 
+    // Initialize student progress for a course
     public void initializeProgress(String userId, String courseId) {
         List<User> users = db.readUsers();
 
         for (User u : users) {
             if (u instanceof Student && u.getUserId().equals(userId)) {
                 Student s = (Student) u;
-                s.getProgress().putIfAbsent(courseId, new ArrayList<>());
-                db.writeUsers(users);
-                return;
-            }
-        }
-    }
 
-    public void completeLesson(String userId, String courseId, String lessonId) {
-        List<User> users = db.readUsers();
+                // If not enrolled, enroll
+                if (!s.getEnrolledCourses().contains(courseId)) {
+                    s.getEnrolledCourses().add(courseId);
+                }
 
-        for (User u : users) {
-            if (u instanceof Student && u.getUserId().equals(userId)) {
-                Student s = (Student) u;
-
-                s.getProgress().putIfAbsent(courseId, new ArrayList<>());
-                List<String> done = s.getProgress().get(courseId);
-
-                if (!done.contains(lessonId)) done.add(lessonId);
+                // Set progress to 0 at start
+                s.setProgress(0);
 
                 db.writeUsers(users);
                 return;
@@ -43,19 +36,30 @@ public class ProgressService {
         }
     }
 
-    public int getProgress(String userId, String courseId) {
-        Course c = db.findCourseById(courseId);
-        if (c == null) return 0;
-
+    // Update progress as a percentage (0 to 100)
+    public void updateProgress(String userId, int newProgress) {
         List<User> users = db.readUsers();
+
         for (User u : users) {
             if (u instanceof Student && u.getUserId().equals(userId)) {
                 Student s = (Student) u;
 
-                int total = c.getLessons().size();
-                int done = s.getProgress().getOrDefault(courseId, new ArrayList<>()).size();
+                s.setProgress(Math.min(100, Math.max(0, newProgress)));
 
-                return total == 0 ? 0 : (done * 100) / total;
+                db.writeUsers(users);
+                return;
+            }
+        }
+    }
+
+    // Get the student's stored progress
+    public int getProgress(String userId) {
+        List<User> users = db.readUsers();
+
+        for (User u : users) {
+            if (u instanceof Student && u.getUserId().equals(userId)) {
+                Student s = (Student) u;
+                return s.getProgress();
             }
         }
         return 0;
