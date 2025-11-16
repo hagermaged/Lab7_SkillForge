@@ -23,6 +23,7 @@ public class CourseService {
         this.db = new JsonDatabaseManager();
         this.courses = db.readCourses();
     }
+
     //course methods
     //method1 : create course
     public Course createCourse(String courseId, String courseTitle, String courseDescription, String instructorId) {
@@ -54,7 +55,7 @@ public class CourseService {
         }
         return false;
     }
-    
+
     //lesson methods
     //method1 : addLesson
     public boolean addLesson(String courseId, String lessonId, String title, String content) {
@@ -94,6 +95,7 @@ public class CourseService {
         }
         return false;
     }
+
     //additional method
     private Lesson findLessonInCourse(Course course, String lessonId) {
         return course.getLessons().stream()
@@ -101,15 +103,23 @@ public class CourseService {
                 .findFirst()
                 .orElse(null);
     }
-    
+
+    public List<Course> getAllCourses() {
+        return new ArrayList<>(courses);
+    }
+
+    public Course getCourseById(String courseId) {
+        return db.findCourseById(courseId);
+    }
+
     //enroll student in course
     public boolean enrollStudent(String courseId, Student student) {
-    Course course = db.findCourseById(courseId);
-    if (course != null) {
-        course.addStudent(student);
-        db.writeCourses(courses);
-        return true;
+        Course course = db.findCourseById(courseId);
+        if (course != null) {
+            course.addStudent(student);
+            db.writeCourses(courses);
+            return true;
+        }
+        return false;
     }
-    return false;
-}
 }
