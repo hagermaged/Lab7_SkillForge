@@ -25,4 +25,11 @@
         <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>com.mycompany.skillforge.Skillforge</exec.mainClass>
     </properties>
+     <dependencies>
+    <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.10.1</version>
+    </dependency>
+</dependencies>
 </project>
