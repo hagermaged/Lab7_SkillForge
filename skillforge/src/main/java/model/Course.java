@@ -34,6 +34,17 @@ public class Course {
         this.lessons = lessons;
     }
     
+    //constructor without students and lessons
+    //constructor with parameters
+    public Course(String courseId, String courseTitle, String courseDescription, String instructorId){
+        this.courseId = courseId;
+        this.courseTitle = courseTitle;
+        this.courseDescription = courseDescription;
+        this.instructorId = instructorId;
+        this.students = new ArrayList<>();
+        this.lessons = new ArrayList<>();
+    }
+    
     //setters and getters
     public void setCourseId(String courseId){
         this.courseId = courseId;
