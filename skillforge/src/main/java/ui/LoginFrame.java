@@ -6,6 +6,8 @@
 package ui;
 import java.awt.*;
 import javax.swing.*;
+import model.User;
+import service.AuthService;
 /**
  *
  * @author orignal store
@@ -192,8 +194,9 @@ return email.matches("^[A-Za-z0-9+_.~]+@(.+)$");
 }
 private boolean attemptLogin(String email,String password)
 {
-    //use real authenticate User
-return !password.isEmpty();
+    AuthService auth=new AuthService();
+    User user=auth.login(email,password);
+    return user!=null;
 }
     /**
      * @param args the command line arguments
