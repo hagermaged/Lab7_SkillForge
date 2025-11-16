@@ -78,4 +78,5 @@ public class JsonDatabaseManager {
     public boolean isCourseIdUnique(String id) {
         return findCourseById(id) == null;
     }
+    
 }
