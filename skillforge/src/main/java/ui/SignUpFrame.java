@@ -7,6 +7,8 @@ package ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
+import model.User;
+import service.AuthService;
 
 /**
  *
@@ -88,7 +90,7 @@ public class SignUpFrame extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Student", "Instructor" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "student", "instructor" }));
 
         jButton1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(0, 30, 80));
@@ -102,7 +104,6 @@ public class SignUpFrame extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(0, 30, 80));
         jButton2.setText("Back To Login");
-        jButton2.setActionCommand("Back To Login");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -253,8 +254,9 @@ private void backToLogin()
     this.dispose();
 }
     private boolean mockSignup(String username, String email, String password, String role) {
-       //add signup backend connections
-     return true;
+       AuthService auth=new AuthService();
+    
+    return auth.signUp(username, email, password, role.toLowerCase());
     }
     private boolean isValidEmail(String email)
 {
