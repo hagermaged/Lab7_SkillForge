@@ -8,7 +8,7 @@ package model;
  *
  * @author Hajer1
  */
-public abstract class User {
+public  class User {
     protected String username;
     protected String email;
     protected String role;
@@ -63,5 +63,5 @@ public abstract class User {
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
-    public abstract String getUserType();
+    
 }

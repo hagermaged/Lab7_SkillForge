@@ -198,6 +198,7 @@ private boolean attemptLogin(String email,String password)
     User user=auth.login(email,password);
     return user!=null;
 }
+
     /**
      * @param args the command line arguments
      */
