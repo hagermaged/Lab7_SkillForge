@@ -4,11 +4,6 @@
  */
 package db;
 
-/**
- *
- * @author Hajer1
- */
-
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import model.*;
@@ -18,10 +13,30 @@ import java.nio.file.*;
 import java.util.*;
 
 public class JsonDatabaseManager {
-
     private final Path usersPath = Paths.get("users.json");
     private final Path coursesPath = Paths.get("courses.json");
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final Gson gson = new GsonBuilder()
+        .setPrettyPrinting()
+        .registerTypeAdapter(User.class, new UserDeserializer())
+        .create();
+
+    // Custom deserializer for User polymorphism
+    private static class UserDeserializer implements JsonDeserializer<User> {
+        @Override
+        public User deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) 
+                throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+            String role = jsonObject.get("role").getAsString();
+            
+            if ("student".equals(role)) {
+                return context.deserialize(json, Student.class);
+            } else if ("instructor".equals(role)) {
+                return context.deserialize(json, Instructor.class);
+            } else {
+                return context.deserialize(json, User.class);
+            }
+        }
+    }
 
     public List<User> readUsers() {
         try {
@@ -78,5 +93,4 @@ public class JsonDatabaseManager {
     public boolean isCourseIdUnique(String id) {
         return findCourseById(id) == null;
     }
-    
 }
