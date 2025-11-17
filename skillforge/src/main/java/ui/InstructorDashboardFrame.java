@@ -17,9 +17,43 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
     /**
      * Creates new form InstructorDashboardFrame
      */
-    public InstructorDashboardFrame() {
+    //attribute given from login panel 
+    private String currentInstructorId;
+
+    //constructor with id
+    public InstructorDashboardFrame(String instructorId) {
+
+        // If no ID was passed -> return to LoginFrame
+        if (instructorId == null || instructorId.trim().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "You must log in first.",
+                    "Access Denied",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+
+            new LoginFrame().setVisible(true); // show login
+            dispose();                         // close dashboard
+            return;
+        }
+
+        this.currentInstructorId = instructorId;
+
         initComponents();
         loadCoursesToTable();
+        setLocationRelativeTo(null);
+        pack();
+    }
+
+    //constructor without id
+    public InstructorDashboardFrame() {
+        this.currentInstructorId = null;
+        initComponents();
+        loadCoursesToTable();
+        setLocationRelativeTo(null);
+        pack();
+    }
+
+    private String getCurrentInstructorId() {
+        return currentInstructorId;
     }
 
     /**
@@ -37,7 +71,6 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
         createCourseButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         coursesTable = new javax.swing.JTable();
-        addCourseButton = new javax.swing.JButton();
         deleteCourseButton = new javax.swing.JButton();
         editCourseButton = new javax.swing.JButton();
         logOutButton = new javax.swing.JButton();
@@ -54,7 +87,6 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 30, 80));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/instructor.png"))); // NOI18N
         jLabel1.setText(" Instructor Dashboard");
 
         jSeparator1.setForeground(new java.awt.Color(0, 30, 80));
@@ -85,17 +117,6 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(coursesTable);
-
-        addCourseButton.setBackground(new java.awt.Color(230, 240, 250));
-        addCourseButton.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
-        addCourseButton.setForeground(new java.awt.Color(0, 30, 80));
-        addCourseButton.setText("Add Course");
-        addCourseButton.setFocusPainted(false);
-        addCourseButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addCourseButtonActionPerformed(evt);
-            }
-        });
 
         deleteCourseButton.setBackground(new java.awt.Color(230, 240, 250));
         deleteCourseButton.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
@@ -149,10 +170,9 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(addCourseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(createCourseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(deleteCourseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editCourseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editCourseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
@@ -161,14 +181,13 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 786, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(258, 258, 258)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addGap(258, 258, 258)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(285, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,13 +200,11 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(createCourseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
-                        .addComponent(addCourseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
+                        .addGap(72, 72, 72)
                         .addComponent(deleteCourseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
+                        .addGap(65, 65, 65)
                         .addComponent(editCourseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
+                        .addGap(58, 58, 58)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -202,10 +219,6 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
     private void createCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createCourseButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_createCourseButtonActionPerformed
-
-    private void addCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCourseButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addCourseButtonActionPerformed
 
     private void deleteCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCourseButtonActionPerformed
         // TODO add your handling code here:
@@ -258,8 +271,51 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
         });
     }
 
+    public void loadCoursesToTable() {
+        // Get the current instructor's ID - you need to pass this when creating the dashboard
+        String currentInstructorId = getCurrentInstructorId(); // You'll need to implement this
+
+        // Get course data from your service
+        CourseService courseService = new CourseService();
+        List<Course> allCourses = courseService.getAllCourses();
+
+        // Filter courses by instructor ID
+        List<Course> instructorCourses = new ArrayList<>();
+        for (Course course : allCourses) {
+            if (course.getInstructorId().equals(currentInstructorId)) {
+                instructorCourses.add(course);
+            }
+        }
+
+        // Create table data
+        Object[][] data = new Object[instructorCourses.size()][4];
+        for (int i = 0; i < instructorCourses.size(); i++) {
+            Course course = instructorCourses.get(i);
+            data[i][0] = course.getCourseId();
+            data[i][1] = course.getCourseTitle();
+            data[i][2] = course.getCourseDescription();
+            data[i][3] = course.getLessons().size(); // Number of lessons
+        }
+
+        // Column names
+        String[] columns = {"ID", "Title", "Description", "Lessons"};
+
+        // Create table model and set it
+        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(data, columns) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Make table non-editable
+            }
+        };
+        coursesTable.setModel(model);
+
+        // Optional: Adjust column widths
+        coursesTable.getColumnModel().getColumn(0).setPreferredWidth(60);  // ID
+        coursesTable.getColumnModel().getColumn(1).setPreferredWidth(150); // Title
+        coursesTable.getColumnModel().getColumn(2).setPreferredWidth(250); // Description
+        coursesTable.getColumnModel().getColumn(3).setPreferredWidth(60);  // Lessons
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addCourseButton;
     private javax.swing.JTable coursesTable;
     private javax.swing.JButton createCourseButton;
     private javax.swing.JButton deleteCourseButton;
@@ -271,26 +327,5 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton logOutButton;
     // End of variables declaration//GEN-END:variables
-    public void loadCoursesToTable() {
-    // Get course data from your service
-    CourseService courseService = new CourseService();
-    List<Course> courses = courseService.getAllCourses();
-    
-    // Create table data
-    Object[][] data = new Object[courses.size()][4];
-    for (int i = 0; i < courses.size(); i++) {
-        Course course = courses.get(i);
-        data[i][0] = course.getCourseId();
-        data[i][1] = course.getCourseTitle();
-        data[i][2] = course.getCourseDescription();
-        data[i][3] = course.getLessons().size(); // Number of lessons
-    }
-    
-    // Column names
-    String[] columns = {"ID", "Title", "Description", "Lessons"};
-    
-    // Create table model and set it
-    javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(data, columns);
-    coursesTable.setModel(model);
-}
+
 }

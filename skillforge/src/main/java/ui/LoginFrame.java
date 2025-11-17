@@ -2,12 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 package ui;
+
 import java.awt.*;
 import javax.swing.*;
 import model.User;
 import service.AuthService;
+
 /**
  *
  * @author orignal store
@@ -140,63 +141,75 @@ public class LoginFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         String email = jTextField1.getText().trim();
         String password = new String(jPasswordField1.getPassword());
-        //Clear all errors
         jLabel4.setText("");
-        //Basic Validation
-        if(email.isEmpty()||password.isEmpty())
-        { jLabel4.setText("Please fill all fields");
-        return;
+        if (email.isEmpty() || password.isEmpty()) {
+            jLabel4.setText("Please fill all fields");
+            return;
         }
-        //Email Validation
-        if(!isValidEmail(email))
-        {
-         jLabel4.setText("Invalid Email Format");
-         return;
+        if (!isValidEmail(email)) {
+            jLabel4.setText("Invalid Email Format");
+            return;
         }
-                // Call your authentication service
-       boolean loginSuccess =attemptLogin(email,password); 
-       if(loginSuccess)
-           openDashboardBasedOnRole(email);
-       else
-           jLabel4.setText("Invalid Email or Password");
-       
+        model.User user = attemptLogin(email, password);
+
+        if (user != null) {
+            jLabel4.setText("Login successful! Redirecting...");
+            // Small delay before redirecting
+            javax.swing.Timer timer = new javax.swing.Timer(1000, new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    openDashboardBasedOnRole(user);
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+        } else {
+            jLabel4.setText("Invalid Email or Password");
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+
         openSignUpFrame();
     }//GEN-LAST:event_jButton2ActionPerformed
-private void openSignUpFrame()
-{
-  new SignUpFrame().setVisible(true);
-  //this.dispose();//close login window
-}
-    private void openDashboardBasedOnRole(String email)
-{
- // TEMPORARY: Simple role detection
- // Later, get actual role from User object
-String role =email.contains("instructor")?"instructor":"student";
-if("student".equals(role)){
-new StudentDashboardFrame().setVisible(true);
-}else{
- new InstructorDashboardFrame().setVisible(true);   
-}
-this.dispose();//close login window
-}
+    private void openSignUpFrame() {
+        new SignUpFrame().setVisible(true);
+    }
 
+    private void openDashboardBasedOnRole(model.User user) {
+        String role = user.getRole();
+        String userId = user.getUserId();
 
-    private boolean isValidEmail(String email)
-{
-return email.matches("^[A-Za-z0-9+_.~]+@(.+)$");
-}
-private boolean attemptLogin(String email,String password)
-{
-    AuthService auth=new AuthService();
-    User user=auth.login(email,password);
-    return user!=null;
+        if ("instructor".equalsIgnoreCase(role)) {
+            new InstructorDashboardFrame(userId).setVisible(true);
+        } else if ("student".equalsIgnoreCase(role)) {
+            new StudentDashboardFrame(userId).setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Unknown user role: " + role + ". Please contact support.",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        this.dispose();
+    }
+
+    private boolean isValidEmail(String email) {
+        return email.matches("^[A-Za-z0-9+_.~]+@(.+)$");
+    }
+
+    private User attemptLogin(String email, String password) {
+    try {
+        AuthService authService = new AuthService();
+        return authService.login(email, password);
+    } catch (Exception e) {
+        e.printStackTrace();
+        jLabel4.setText("Login service error: " + e.getMessage());
+        return null;
+    }
 }
 
     /**
