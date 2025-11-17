@@ -11,6 +11,7 @@ package ui;
 import service.*;
 import model.*;
 import java.util.*;
+import java.awt.CardLayout;
 
 public class InstructorDashboardFrame extends javax.swing.JFrame {
 
@@ -19,29 +20,40 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
      */
     //attribute given from login panel 
     private String currentInstructorId;
+    private CreateCoursePanel createCoursePanel;
+    private EditCoursePanel editCoursePanel;
 
     //constructor with id
     public InstructorDashboardFrame(String instructorId) {
+    // If no ID was passed -> return to LoginFrame
+    if (instructorId == null || instructorId.trim().isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "You must log in first.",
+                "Access Denied",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
 
-        // If no ID was passed -> return to LoginFrame
-        if (instructorId == null || instructorId.trim().isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "You must log in first.",
-                    "Access Denied",
-                    javax.swing.JOptionPane.WARNING_MESSAGE);
-
-            new LoginFrame().setVisible(true); // show login
-            dispose();                         // close dashboard
-            return;
-        }
-
-        this.currentInstructorId = instructorId;
-
-        initComponents();
-        loadCoursesToTable();
-        setLocationRelativeTo(null);
-        pack();
+        new LoginFrame().setVisible(true); // show login
+        dispose();                         // close dashboard
+        return;
     }
+
+    this.currentInstructorId = instructorId;
+    
+    initComponents(); // This must be called FIRST
+    
+    // Initialize panels AFTER initComponents()
+    this.createCoursePanel = new CreateCoursePanel(currentInstructorId, this);
+    this.editCoursePanel = new EditCoursePanel(); // Empty constructor for now
+    
+    // Add panels to CardLayout
+    instructorDashboardMainPanel.add(new javax.swing.JPanel(), "main"); // Default empty panel
+    instructorDashboardMainPanel.add(createCoursePanel, "createCourse");
+    instructorDashboardMainPanel.add(editCoursePanel, "editCourse");
+    
+    loadCoursesToTable();
+    setLocationRelativeTo(null);
+    pack();
+}
 
     //constructor without id
     public InstructorDashboardFrame() {
@@ -120,7 +132,7 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
 
         deleteCourseButton.setBackground(new java.awt.Color(230, 240, 250));
         deleteCourseButton.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
-        deleteCourseButton.setForeground(new java.awt.Color(0, 30, 80));
+        deleteCourseButton.setForeground(new java.awt.Color(120, 0, 0));
         deleteCourseButton.setText("Delete Course");
         deleteCourseButton.setFocusPainted(false);
         deleteCourseButton.addActionListener(new java.awt.event.ActionListener() {
@@ -217,23 +229,100 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createCourseButtonActionPerformed
-        // TODO add your handling code here:
+    CardLayout cardLayout = (CardLayout) instructorDashboardMainPanel.getLayout();
+    cardLayout.show(instructorDashboardMainPanel, "createCourse");
+
     }//GEN-LAST:event_createCourseButtonActionPerformed
 
     private void deleteCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCourseButtonActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = coursesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Please select a course to delete.",
+                    "No Selection",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String courseId = (String) coursesTable.getValueAt(selectedRow, 0);
+        String courseTitle = (String) coursesTable.getValueAt(selectedRow, 1);
+
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to delete course: " + courseTitle + "?",
+                "Confirm Delete",
+                javax.swing.JOptionPane.YES_NO_OPTION);
+
+        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+            CourseService courseService = new CourseService();
+            boolean success = courseService.deleteCourse(courseId);
+
+            if (success) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Course deleted successfully!",
+                        "Success",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                loadCoursesToTable(); // Refresh the table
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Failed to delete course.",
+                        "Error",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_deleteCourseButtonActionPerformed
 
     private void editCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCourseButtonActionPerformed
-        // TODO add your handling code here:
+    int selectedRow = coursesTable.getSelectedRow();
+    if (selectedRow == -1) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Please select a course to edit.",
+                "No Selection",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Get the selected course ID
+    String courseId = (String) coursesTable.getValueAt(selectedRow, 0);
+
+    // Create a NEW EditCoursePanel with the course ID
+    editCoursePanel = new EditCoursePanel(currentInstructorId, courseId, this);
+    
+    // Remove the old edit panel and add the new one
+    instructorDashboardMainPanel.remove(editCoursePanel);
+    instructorDashboardMainPanel.add(editCoursePanel, "editCourse");
+    
+    // Refresh the layout
+    instructorDashboardMainPanel.revalidate();
+    instructorDashboardMainPanel.repaint();
+    
+    // Switch to edit course panel
+    CardLayout cardLayout = (CardLayout) instructorDashboardMainPanel.getLayout();
+    cardLayout.show(instructorDashboardMainPanel, "editCourse");
+    
+    System.out.println("Switched to Edit Course Panel for course ID: " + courseId);
     }//GEN-LAST:event_editCourseButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
-        // TODO add your handling code here:
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to log out?",
+                "Confirm Logout",
+                javax.swing.JOptionPane.YES_NO_OPTION);
+
+        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+            new LoginFrame().setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_logOutButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        // TODO add your handling code here:
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to exit the application?",
+                "Confirm Exit",
+                javax.swing.JOptionPane.YES_NO_OPTION);
+
+        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }//GEN-LAST:event_exitButtonActionPerformed
 
     /**

@@ -8,13 +8,38 @@ package ui;
  *
  * @author Hajer1
  */
+import javax.swing.JOptionPane;
+import service.*;
+
 public class CreateCoursePanel extends javax.swing.JPanel {
 
     /**
      * Creates new form CreateCoursePanel
      */
+    private String courseTitle;
+    private String courseDescription;
+    private String instructorId;
+    private InstructorDashboardFrame parentFrame;
+
+    public void setInstructorId(String instructorId) {
+        this.instructorId = instructorId;
+    }
+
+    public void setParentFrame(InstructorDashboardFrame parentFrame) {
+        this.parentFrame = parentFrame;
+    }
+
+    // Default constructor
     public CreateCoursePanel() {
         initComponents();
+    }
+    
+    // Constructor with parameters
+    public CreateCoursePanel(String instructorId, InstructorDashboardFrame parentFrame) {
+        initComponents();
+        this.instructorId = instructorId;
+        this.parentFrame = parentFrame;
+        System.out.println("CreateCoursePanel initialized for instructor: " + instructorId);
     }
 
     /**
@@ -26,21 +51,205 @@ public class CreateCoursePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
+        newCourseTitle = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        newCourseDescription = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        addCourseButton = new javax.swing.JButton();
+        returnToMenuButton = new javax.swing.JButton();
+
         setBackground(new java.awt.Color(247, 250, 252));
+
+        jLabel1.setBackground(new java.awt.Color(252, 250, 247));
+        jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 30, 80));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Create Course");
+
+        jSeparator1.setForeground(new java.awt.Color(0, 30, 80));
+
+        jLabel2.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 30, 80));
+        jLabel2.setText("Course Title :");
+
+        newCourseTitle.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        newCourseTitle.setForeground(new java.awt.Color(0, 30, 80));
+
+        jLabel3.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 30, 80));
+        jLabel3.setText("Course Description :");
+
+        newCourseDescription.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        newCourseDescription.setForeground(new java.awt.Color(0, 30, 80));
+
+        jLabel4.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 30, 80));
+
+        addCourseButton.setBackground(new java.awt.Color(230, 240, 250));
+        addCourseButton.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        addCourseButton.setForeground(new java.awt.Color(0, 30, 80));
+        addCourseButton.setText("Add Course");
+        addCourseButton.setFocusPainted(false);
+        addCourseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addCourseButtonActionPerformed(evt);
+            }
+        });
+
+        returnToMenuButton.setBackground(new java.awt.Color(230, 240, 250));
+        returnToMenuButton.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        returnToMenuButton.setForeground(new java.awt.Color(0, 30, 80));
+        returnToMenuButton.setText("Return To Menu");
+        returnToMenuButton.setFocusPainted(false);
+        returnToMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnToMenuButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(97, 97, 97)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(newCourseDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(newCourseTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(288, 288, 288))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(addCourseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(returnToMenuButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(113, 113, 113))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(newCourseTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(78, 78, 78))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(newCourseDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(131, 131, 131)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addCourseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(returnToMenuButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(84, 84, 84))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void addCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCourseButtonActionPerformed
+        // Get input values
+        String title = newCourseTitle.getText().trim();
+        String description = newCourseDescription.getText().trim();
+
+        // Validate inputs
+        if (title.isEmpty() || description.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Please fill in both course title and description.",
+                    "Input Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (title.length() < 2 || title.length() > 100) {
+            JOptionPane.showMessageDialog(this,
+                    "Course title must be between 2 and 100 characters.",
+                    "Input Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (description.length() < 10 || description.length() > 1000) {
+            JOptionPane.showMessageDialog(this,
+                    "Course description must be between 10 and 1000 characters.",
+                    "Input Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // Create course using CourseService
+            CourseService courseService = new CourseService();
+            courseService.createCourse(title, description, instructorId);
+
+            // Show success message
+            JOptionPane.showMessageDialog(this,
+                    "Course created successfully!",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            // Clear form
+            newCourseTitle.setText("");
+            newCourseDescription.setText("");
+
+            // Refresh the courses table in parent frame if available
+            if (parentFrame != null) {
+                parentFrame.loadCoursesToTable();
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error creating course: " + e.getMessage(),
+                    "Creation Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_addCourseButtonActionPerformed
+
+    private void returnToMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnToMenuButtonActionPerformed
+        java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+        if (parentWindow != null) {
+            parentWindow.dispose(); // Close the current window
+        }
+
+        // Open a new InstructorDashboardFrame
+        if (instructorId != null) {
+            new InstructorDashboardFrame(instructorId).setVisible(true);
+        } else {
+            new InstructorDashboardFrame().setVisible(true);
+        }
+    }//GEN-LAST:event_returnToMenuButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addCourseButton;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField newCourseDescription;
+    private javax.swing.JTextField newCourseTitle;
+    private javax.swing.JButton returnToMenuButton;
     // End of variables declaration//GEN-END:variables
 }
