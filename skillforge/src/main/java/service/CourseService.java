@@ -26,7 +26,9 @@ public class CourseService {
 
     //course methods
     //method1 : create course
-    public Course createCourse(String courseId, String courseTitle, String courseDescription, String instructorId) {
+    public Course createCourse(String courseTitle, String courseDescription, String instructorId) {
+        IdGenerator id = new IdGenerator();
+        String courseId = id.generateCourseId(courses);
         Course course = new Course(courseId, courseTitle, courseDescription, instructorId);
         courses.add(course);
         db.writeCourses(courses);
@@ -82,6 +84,15 @@ public class CourseService {
         }
         return false;
     }
+    
+    //get lessons for a course
+        public List<Lesson> getLessonsForCourse(String courseId) {
+        Course course = getCourseById(courseId);
+        if (course != null) {
+            return course.getLessons();
+        }
+        return new ArrayList<>();
+    }
 
     public boolean deleteLesson(String courseId, String lessonId) {
         Course course = db.findCourseById(courseId);
@@ -122,4 +133,11 @@ public class CourseService {
         }
         return false;
     }
+
+    //get resources comma seperated
+    public String getResourcesAsCommaSeparated(Lesson lesson) {
+        var res = lesson.getResources();
+        return (res == null || res.isEmpty()) ? "No resources" : String.join(", ", res);
+    }
+
 }

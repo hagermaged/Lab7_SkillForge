@@ -1,0 +1,471 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
+package ui;
+
+/**
+ *
+ * @author Hajer1
+ */
+import service.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.*;
+import java.util.List;
+
+public class EditCoursePanel extends javax.swing.JPanel {
+
+    /**
+     * Creates new form EditCoursePanel
+     */
+private String courseId;
+    private String instructorId;
+    private InstructorDashboardFrame parent;
+    private CourseService courseService;
+    private DefaultTableModel lessonsTableModel;
+    private String selectedLessonId;
+
+    public EditCoursePanel() {
+        initComponents();
+        this.courseService = new CourseService();
+        initializeLessonsTable();
+    }
+
+    public EditCoursePanel(String instructorId, String courseId, InstructorDashboardFrame parent) {
+    this.courseId = courseId;
+    this.parent = parent;
+    this.instructorId = instructorId;
+    this.courseService = new CourseService();
+    initComponents(); // This must be called first
+    initializeLessonsTable();
+    loadCourseData();
+    loadLessonsToTable();
+}
+
+    private void initializeLessonsTable() {
+        // Initialize the table model with columns: ID, Title, Resources
+        lessonsTableModel = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"ID", "Title", "Resources"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Make all cells non-editable
+                return false;
+            }
+        };
+        lessonsTable.setModel(lessonsTableModel);
+        
+        // Add selection listener to the table
+        lessonsTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && lessonsTable.getSelectedRow() != -1) {
+                loadSelectedLessonData();
+            }
+        });
+    }
+
+
+    private void loadCourseData() {
+        if (courseId != null) {
+            Course course = courseService.getCourseById(courseId);
+            if (course != null) {
+                courseTitleField.setText(course.getCourseTitle());
+                courseDescriptionField.setText(course.getCourseDescription());
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Course not found!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+
+    private void loadLessonsToTable() {
+        if (courseId == null) {
+            return;
+        }
+
+        // Clear existing data
+        lessonsTableModel.setRowCount(0);
+
+        // Get lessons for the current course
+        Course course = courseService.getCourseById(courseId);
+        if (course != null) {
+            List<Lesson> lessons = course.getLessons();
+
+            // Populate the table
+            for (Lesson lesson : lessons) {
+                String resources = courseService.getResourcesAsCommaSeparated(lesson);
+                lessonsTableModel.addRow(new Object[]{
+                    lesson.getLessonId(),
+                    lesson.getLessonTitle(),
+                    resources
+                });
+            }
+
+            // Show message if no lessons found
+            if (lessons.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No lessons found for this course.",
+                        "Information",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        
+        // Clear the lesson editing fields
+        clearLessonFields();
+    }
+    private void loadSelectedLessonData() {
+        int selectedRow = lessonsTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            // Get the lesson ID from the selected row
+            selectedLessonId = (String) lessonsTableModel.getValueAt(selectedRow, 0);
+            String lessonTitle = (String) lessonsTableModel.getValueAt(selectedRow, 1);
+            String resources = (String) lessonsTableModel.getValueAt(selectedRow, 2);
+            
+            // Load data into editing fields
+            courseTitleField.setText(lessonTitle);
+            lessonResourcesField.setText(resources);
+        }
+    }
+    
+    private void clearLessonFields() {
+        courseTitleField.setText("");
+        lessonResourcesField.setText("");
+        selectedLessonId = null;
+    }
+    
+    public void setCourseToEdit(String courseId) {
+        this.courseId = courseId;
+        loadCourseData();
+    }
+
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        returnToMenuButton = new javax.swing.JButton();
+        saveProgressButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lessonsTable = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        courseTitleField = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        lessonResourcesField = new javax.swing.JTextField();
+        lessonTitleField1 = new javax.swing.JTextField();
+        courseDescriptionField = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        deleteLessonButton = new javax.swing.JButton();
+
+        jPanel1.setBackground(new java.awt.Color(247, 250, 252));
+
+        jLabel1.setBackground(new java.awt.Color(252, 250, 247));
+        jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 30, 80));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Edit Course");
+
+        returnToMenuButton.setBackground(new java.awt.Color(230, 240, 250));
+        returnToMenuButton.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        returnToMenuButton.setForeground(new java.awt.Color(0, 30, 80));
+        returnToMenuButton.setText("Return To Menu");
+        returnToMenuButton.setFocusPainted(false);
+        returnToMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnToMenuButtonActionPerformed(evt);
+            }
+        });
+
+        saveProgressButton.setBackground(new java.awt.Color(230, 240, 250));
+        saveProgressButton.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        saveProgressButton.setForeground(new java.awt.Color(0, 30, 80));
+        saveProgressButton.setText("Save Progress");
+        saveProgressButton.setFocusPainted(false);
+        saveProgressButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveProgressButtonActionPerformed(evt);
+            }
+        });
+
+        lessonsTable.setBackground(new java.awt.Color(230, 240, 250));
+        lessonsTable.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        lessonsTable.setForeground(new java.awt.Color(0, 30, 80));
+        lessonsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "ID", "Title", "Resources"
+            }
+        ));
+        jScrollPane1.setViewportView(lessonsTable);
+
+        jLabel2.setBackground(new java.awt.Color(252, 250, 247));
+        jLabel2.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 30, 80));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Lessons");
+
+        jLabel3.setBackground(new java.awt.Color(252, 250, 247));
+        jLabel3.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 30, 80));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Lesson Title :");
+
+        courseTitleField.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        courseTitleField.setForeground(new java.awt.Color(0, 30, 80));
+
+        jLabel4.setBackground(new java.awt.Color(252, 250, 247));
+        jLabel4.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 30, 80));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Lesson Resources :");
+
+        lessonResourcesField.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        lessonResourcesField.setForeground(new java.awt.Color(0, 30, 80));
+
+        lessonTitleField1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        lessonTitleField1.setForeground(new java.awt.Color(0, 30, 80));
+
+        courseDescriptionField.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        courseDescriptionField.setForeground(new java.awt.Color(0, 30, 80));
+
+        jLabel5.setBackground(new java.awt.Color(252, 250, 247));
+        jLabel5.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 30, 80));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Course Title :");
+
+        jLabel6.setBackground(new java.awt.Color(252, 250, 247));
+        jLabel6.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 30, 80));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Course Description :");
+
+        deleteLessonButton.setBackground(new java.awt.Color(230, 240, 250));
+        deleteLessonButton.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        deleteLessonButton.setForeground(new java.awt.Color(120, 0, 0));
+        deleteLessonButton.setText("Delete Lesson");
+        deleteLessonButton.setFocusPainted(false);
+        deleteLessonButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteLessonButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(saveProgressButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(deleteLessonButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(courseDescriptionField, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lessonTitleField1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(courseTitleField, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(85, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(returnToMenuButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lessonResourcesField, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(82, 82, 82)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(courseTitleField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(courseDescriptionField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lessonTitleField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lessonResourcesField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(33, 33, 33)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(returnToMenuButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteLessonButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveProgressButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(37, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void returnToMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnToMenuButtonActionPerformed
+        java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
+        if (parentWindow != null) {
+            parentWindow.dispose(); // Close the current window
+        }
+
+        // Open a new InstructorDashboardFrame
+        if (instructorId != null) {
+            new InstructorDashboardFrame(instructorId).setVisible(true);
+        } else {
+            new InstructorDashboardFrame().setVisible(true);
+        }
+    }//GEN-LAST:event_returnToMenuButtonActionPerformed
+
+    private void saveProgressButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProgressButtonActionPerformed
+    String newTitle = courseTitleField.getText().trim();
+        String newDescription = courseDescriptionField.getText().trim();
+        
+        if (newTitle.isEmpty() || newDescription.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Please fill in both course title and description.",
+                "Input Error",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        try {
+            boolean success = courseService.editCourse(courseId, newTitle, newDescription);
+            if (success) {
+                JOptionPane.showMessageDialog(this,
+                    "Course updated successfully!",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                // Refresh the parent frame if available
+                if (parent != null) {
+                    parent.loadCoursesToTable();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Failed to update course.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error updating course: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_saveProgressButtonActionPerformed
+
+    private void deleteLessonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteLessonButtonActionPerformed
+    if (selectedLessonId == null) {
+            JOptionPane.showMessageDialog(this,
+                "Please select a lesson from the table first.",
+                "No Lesson Selected",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Confirm deletion
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to delete this lesson?\nThis action cannot be undone.",
+            "Confirm Deletion",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                boolean success = courseService.deleteLesson(courseId, selectedLessonId);
+                if (success) {
+                    JOptionPane.showMessageDialog(this,
+                        "Lesson deleted successfully!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+                    
+                    // Refresh the table and clear fields
+                    loadLessonsToTable();
+                    clearLessonFields();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                        "Failed to delete lesson.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,
+                    "Error deleting lesson: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_deleteLessonButtonActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField courseDescriptionField;
+    private javax.swing.JTextField courseTitleField;
+    private javax.swing.JButton deleteLessonButton;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField lessonResourcesField;
+    private javax.swing.JTextField lessonTitleField1;
+    private javax.swing.JTable lessonsTable;
+    private javax.swing.JButton returnToMenuButton;
+    private javax.swing.JButton saveProgressButton;
+    // End of variables declaration//GEN-END:variables
+}
