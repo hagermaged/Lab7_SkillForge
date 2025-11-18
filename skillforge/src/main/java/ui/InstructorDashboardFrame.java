@@ -25,35 +25,21 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
 
     //constructor with id
     public InstructorDashboardFrame(String instructorId) {
-    // If no ID was passed -> return to LoginFrame
-    if (instructorId == null || instructorId.trim().isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this,
-                "You must log in first.",
-                "Access Denied",
-                javax.swing.JOptionPane.WARNING_MESSAGE);
+        if (instructorId == null || instructorId.trim().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "You must log in first.",
+                    "Access Denied",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            new LoginFrame().setVisible(true);
+            dispose();
+            return;
+        }
 
-        new LoginFrame().setVisible(true); // show login
-        dispose();                         // close dashboard
-        return;
+        this.currentInstructorId = instructorId;
+        initComponents();
+        loadCoursesToTable();
+        setLocationRelativeTo(null);
     }
-
-    this.currentInstructorId = instructorId;
-    
-    initComponents(); // This must be called FIRST
-    
-    // Initialize panels AFTER initComponents()
-    this.createCoursePanel = new CreateCoursePanel(currentInstructorId, this);
-    this.editCoursePanel = new EditCoursePanel(); // Empty constructor for now
-    
-    // Add panels to CardLayout
-    instructorDashboardMainPanel.add(new javax.swing.JPanel(), "main"); // Default empty panel
-    instructorDashboardMainPanel.add(createCoursePanel, "createCourse");
-    instructorDashboardMainPanel.add(editCoursePanel, "editCourse");
-    
-    loadCoursesToTable();
-    setLocationRelativeTo(null);
-    pack();
-}
 
     //constructor without id
     public InstructorDashboardFrame() {
@@ -65,7 +51,7 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
     }
 
     private String getCurrentInstructorId() {
-        return currentInstructorId;
+        return this.currentInstructorId;
     }
 
     /**
@@ -90,7 +76,6 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(252, 250, 247));
-        setPreferredSize(new java.awt.Dimension(800, 600));
         setResizable(false);
 
         instructorDashboardMainPanel.setLayout(new java.awt.CardLayout());
@@ -99,7 +84,7 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 30, 80));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText(" Instructor Dashboard");
+        jLabel1.setText("Instructor Dashboard");
 
         jSeparator1.setForeground(new java.awt.Color(0, 30, 80));
 
@@ -180,6 +165,10 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(instructorDashboardMainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(createCourseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -189,17 +178,11 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
                         .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(exitButton)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(258, 258, 258)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(285, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -229,8 +212,9 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createCourseButtonActionPerformed
-    CardLayout cardLayout = (CardLayout) instructorDashboardMainPanel.getLayout();
-    cardLayout.show(instructorDashboardMainPanel, "createCourse");
+        CreateCourseFrame createFrame = new CreateCourseFrame(currentInstructorId, this);
+        createFrame.setVisible(true);
+        this.setVisible(false);
 
     }//GEN-LAST:event_createCourseButtonActionPerformed
 
@@ -272,34 +256,19 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteCourseButtonActionPerformed
 
     private void editCourseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCourseButtonActionPerformed
-    int selectedRow = coursesTable.getSelectedRow();
-    if (selectedRow == -1) {
-        javax.swing.JOptionPane.showMessageDialog(this,
-                "Please select a course to edit.",
-                "No Selection",
-                javax.swing.JOptionPane.WARNING_MESSAGE);
-        return;
-    }
+        int selectedRow = coursesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Please select a course to edit.",
+                    "No Selection",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-    // Get the selected course ID
-    String courseId = (String) coursesTable.getValueAt(selectedRow, 0);
-
-    // Create a NEW EditCoursePanel with the course ID
-    editCoursePanel = new EditCoursePanel(currentInstructorId, courseId, this);
-    
-    // Remove the old edit panel and add the new one
-    instructorDashboardMainPanel.remove(editCoursePanel);
-    instructorDashboardMainPanel.add(editCoursePanel, "editCourse");
-    
-    // Refresh the layout
-    instructorDashboardMainPanel.revalidate();
-    instructorDashboardMainPanel.repaint();
-    
-    // Switch to edit course panel
-    CardLayout cardLayout = (CardLayout) instructorDashboardMainPanel.getLayout();
-    cardLayout.show(instructorDashboardMainPanel, "editCourse");
-    
-    System.out.println("Switched to Edit Course Panel for course ID: " + courseId);
+        String courseId = (String) coursesTable.getValueAt(selectedRow, 0);
+        EditCourseFrame editFrame = new EditCourseFrame(currentInstructorId, courseId, this);
+        editFrame.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_editCourseButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
@@ -361,48 +330,63 @@ public class InstructorDashboardFrame extends javax.swing.JFrame {
     }
 
     public void loadCoursesToTable() {
-        // Get the current instructor's ID - you need to pass this when creating the dashboard
-        String currentInstructorId = getCurrentInstructorId(); // You'll need to implement this
+        String currentInstructorId = getCurrentInstructorId();
 
-        // Get course data from your service
-        CourseService courseService = new CourseService();
-        List<Course> allCourses = courseService.getAllCourses();
-
-        // Filter courses by instructor ID
-        List<Course> instructorCourses = new ArrayList<>();
-        for (Course course : allCourses) {
-            if (course.getInstructorId().equals(currentInstructorId)) {
-                instructorCourses.add(course);
-            }
+        if (currentInstructorId == null) {
+            System.out.println("No instructor ID available");
+            return;
         }
 
-        // Create table data
-        Object[][] data = new Object[instructorCourses.size()][4];
-        for (int i = 0; i < instructorCourses.size(); i++) {
-            Course course = instructorCourses.get(i);
-            data[i][0] = course.getCourseId();
-            data[i][1] = course.getCourseTitle();
-            data[i][2] = course.getCourseDescription();
-            data[i][3] = course.getLessons().size(); // Number of lessons
-        }
+        try {
+            // Get course data from your service
+            CourseService courseService = new CourseService();
+            List<Course> allCourses = courseService.getAllCourses();
 
-        // Column names
-        String[] columns = {"ID", "Title", "Description", "Lessons"};
-
-        // Create table model and set it
-        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(data, columns) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Make table non-editable
+            // Filter courses by instructor ID
+            List<Course> instructorCourses = new ArrayList<>();
+            for (Course course : allCourses) {
+                if (course.getInstructorId() != null && course.getInstructorId().equals(currentInstructorId)) {
+                    instructorCourses.add(course);
+                }
             }
-        };
-        coursesTable.setModel(model);
 
-        // Optional: Adjust column widths
-        coursesTable.getColumnModel().getColumn(0).setPreferredWidth(60);  // ID
-        coursesTable.getColumnModel().getColumn(1).setPreferredWidth(150); // Title
-        coursesTable.getColumnModel().getColumn(2).setPreferredWidth(250); // Description
-        coursesTable.getColumnModel().getColumn(3).setPreferredWidth(60);  // Lessons
+            // Create table data
+            Object[][] data = new Object[instructorCourses.size()][4];
+            for (int i = 0; i < instructorCourses.size(); i++) {
+                Course course = instructorCourses.get(i);
+                data[i][0] = course.getCourseId();
+                data[i][1] = course.getCourseTitle();
+                data[i][2] = course.getCourseDescription();
+                data[i][3] = course.getLessons() != null ? course.getLessons().size() : 0; // Handle null lessons
+            }
+
+            // Column names
+            String[] columns = {"ID", "Title", "Description", "Lessons"};
+
+            // Create table model and set it
+            javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(data, columns) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false; // Make table non-editable
+                }
+            };
+            coursesTable.setModel(model);
+
+            // Adjust column widths
+            coursesTable.getColumnModel().getColumn(0).setPreferredWidth(60);  // ID
+            coursesTable.getColumnModel().getColumn(1).setPreferredWidth(150); // Title
+            coursesTable.getColumnModel().getColumn(2).setPreferredWidth(250); // Description
+            coursesTable.getColumnModel().getColumn(3).setPreferredWidth(60);  // Lessons
+
+            System.out.println("Loaded " + instructorCourses.size() + " courses for instructor: " + currentInstructorId);
+
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Error loading courses: " + e.getMessage(),
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable coursesTable;
