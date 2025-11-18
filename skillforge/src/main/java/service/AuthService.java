@@ -23,12 +23,12 @@ public class AuthService {
         this.dbManager = new JsonDatabaseManager();
         this.idGenerator = new IdGenerator();
     }
-    
+
     // Email Validation
     private boolean validateEmail(String email) {
         return email.matches("^[A-Za-z0-9+_.~]+@(.+)$");
     }
-    
+
     // SHA-256 Password Hashing
     public String hashPassword(String password) {
         try {
@@ -49,8 +49,8 @@ public class AuthService {
     }
 
     public boolean signUp(String username, String email, String password, String role) {
-        if (username == null || email == null || password == null || 
-            username.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty()) {
+        if (username == null || email == null || password == null
+                || username.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty()) {
             return false;
         }
         if (!validateEmail(email)) {
@@ -96,7 +96,7 @@ public class AuthService {
     public void logout() {
         System.out.println("User logged out");
     }
-    
+
     // Find user by email
     public User findUserByEmail(String email) {
         List<User> users = dbManager.readUsers();
@@ -106,5 +106,35 @@ public class AuthService {
             }
         }
         return null;
+    }
+    //find user by id
+
+    public User getUserById(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            List<User> users = dbManager.readUsers();
+
+            for (User user : users) {
+                if (userId.equals(user.getUserId())) {
+                    // Return the specific type (Student or Instructor) with proper casting
+                    if ("student".equals(user.getRole())) {
+                        return (Student) user;
+                    } else if ("instructor".equals(user.getRole())) {
+                        return (Instructor) user;
+                    } else {
+                        return user; // Generic user
+                    }
+                }
+            }
+            return null; // User not found
+
+        } catch (Exception e) {
+            System.err.println("Error getting user by ID: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 }

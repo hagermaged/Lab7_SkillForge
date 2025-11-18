@@ -323,7 +323,46 @@
     "courseTitle": "Signals",
     "courseDescription": "Signals and Systems",
     "instructorId": "U2",
-    "students": [],
+    "students": [
+      {
+        "enrolledCourses": [
+          "C1",
+          "C2",
+          "C3",
+          "C5",
+          "C6",
+          "C8",
+          "C13"
+        ],
+        "progress": 55,
+        "courseProgress": {
+          "C1": [
+            "L1",
+            "L2"
+          ],
+          "C2": [
+            "L3"
+          ],
+          "C3": [
+            "L6"
+          ],
+          "C5": [
+            "L8",
+            "L9"
+          ],
+          "C6": [
+            "L11"
+          ],
+          "C8": [],
+          "C13": []
+        },
+        "username": "john_doe",
+        "email": "john@example.com",
+        "role": "student",
+        "userId": "U1",
+        "passwordHash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+      }
+    ],
     "lessons": [
       {
         "lessonId": "L31",
