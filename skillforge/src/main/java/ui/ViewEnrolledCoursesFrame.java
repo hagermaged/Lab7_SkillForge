@@ -273,6 +273,16 @@ public class ViewEnrolledCoursesFrame extends javax.swing.JFrame {
 
     private void returnToMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnToMenuButtonActionPerformed
         // TODO add your handling code here:
+            java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+        if (window != null) {
+            window.dispose();
+        }
+
+        // Show the parent dashboard and refresh courses
+        if (parent != null) {
+            parent.setVisible(true);
+        }
+
     }//GEN-LAST:event_returnToMenuButtonActionPerformed
 
     /**

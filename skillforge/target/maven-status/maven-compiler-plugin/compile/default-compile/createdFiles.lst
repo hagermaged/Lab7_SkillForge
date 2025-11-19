@@ -25,6 +25,7 @@ ui\EditCoursePanel$4.class
 ui\StudentDashboardFrame$3.class
 db\JsonDatabaseManager$1.class
 db\JsonDatabaseManager.class
+ui\ViewCourseDetailsFrame$4.class
 db\JsonDatabaseManager$UserDeserializer.class
 service\ProgressService.class
 ui\SignUpFrame$4.class
@@ -48,6 +49,7 @@ ui\ViewEnrolledCoursesFrame$2.class
 db\JsonDatabaseManager$2.class
 ui\StudentDashboardFrame$4.class
 ui\AddLessonFrame.class
+ui\ViewCourseDetailsFrame$2.class
 ui\StudentDashboardFrame$1.class
 model\Instructor.class
 ui\InstructorDashboardFrame$7.class
@@ -64,6 +66,7 @@ ui\EditCoursePanel$2.class
 ui\LoginFrame$1.class
 ui\ViewEnrolledCoursesFrame$1.class
 ui\SignUpFrame$6.class
+ui\ViewCourseDetailsFrame$3.class
 ui\LoginFrame.class
 ui\SignUpFrame.class
 ui\StudentDashboardFrame$2.class
